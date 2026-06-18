@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Agent Orchestrator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <h1 class="text-3xl font-bold mb-6">AI Agent Orchestration Platform</h1>
+    
+    <div class="mb-4">
+        <input id="promptInput" type="text" placeholder="Enter research topic..." class="p-2 rounded w-2/3 text-black">
+        <button onclick="startTask()" class="bg-blue-600 p-2 rounded ml-2">Start Agents</button>
+    </div>
+
+    <div id="status" class="bg-gray-800 p-4 rounded hidden">
+        <p>Task ID: <span id="taskId" class="font-mono text-green-400"></span></p>
+        <p>Status: <span id="taskStatus" class="font-mono text-yellow-400"></span></p>
+    </div>
+
+    <script>
+        async function startTask() {
+            const prompt = document.getElementById('promptInput').value;
+            const res = await fetch('http://localhost:8080/api/tasks', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ prompt })
+            });
+            const data = await res.json();
+            
+            document.getElementById('status').classList.remove('hidden');
+            document.getElementById('taskId').innerText = data.task_id;
+            document.getElementById('taskStatus').innerText = data.status;
+            
+            // Poll for status (In prod, use WebSockets)
+            pollStatus(data.task_id);
+        }
+
+        async function pollStatus(id) {
+            // Implement polling to /api/tasks/{id} here
+            console.log("Polling for task:", id);
+        }
+    </script>
+</body>
+</html>

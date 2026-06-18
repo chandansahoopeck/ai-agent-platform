@@ -1,0 +1,21 @@
+syntax = "proto3";
+package orchestrator;
+option go_package = "ai-agent-platform/proto";
+
+service OrchestratorService {
+  rpc CreateTask (CreateTaskRequest) returns (CreateTaskResponse);
+  rpc GetTaskStatus (TaskStatusRequest) returns (TaskStatusResponse);
+}
+
+message CreateTaskRequest {
+  string user_id = 1;
+  string prompt = 2;
+}
+
+message CreateTaskResponse {
+  string task_id = 1;
+  string status = 2;
+}
+
+message TaskStatusRequest { string task_id = 1; }
+message TaskStatusResponse { string task_id = 1; string status = 2; string result = 3; }

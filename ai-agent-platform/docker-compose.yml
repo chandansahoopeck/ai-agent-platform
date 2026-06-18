@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: agents_db
+    ports: ["5432:5432"]
+
+  redis:
+    image: redis:alpine
+    ports: ["6379:6379"]
+
+  nats:
+    image: nats:latest
+    ports: ["4222:4222"] # Client port
+    command: "--js" # Enable JetStream for persistent queues
+
+  # Go Services
+  gateway:
+    build: ./go-services/gateway
+    ports: ["8080:8080"]
+    depends_on: [postgres, redis, nats]
+
+  orchestrator:
+    build: ./go-services/orchestrator
+    depends_on: [postgres, redis, nats]
+
+  # Python Agents
+  research-agent:
+    build: ./python-agents/research
+    depends_on: [postgres, nats]
+  
+  data-agent:
+    build: ./python-agents/data
+    depends_on: [postgres, nats]
+
+  summary-agent:
+    build: ./python-agents/summarization
+    depends_on: [postgres, nats]
+
+  report-agent:
+    build: ./python-agents/report
+    depends_on: [postgres, nats]
