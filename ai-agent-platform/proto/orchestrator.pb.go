@@ -249,7 +249,7 @@ const file_proto_orchestrator_proto_rawDesc = "" +
 	"\x13OrchestratorService\x12O\n" +
 	"\n" +
 	"CreateTask\x12\x1f.orchestrator.CreateTaskRequest\x1a .orchestrator.CreateTaskResponse\x12R\n" +
-	"\rGetTaskStatus\x12\x1f.orchestrator.TaskStatusRequest\x1a .orchestrator.TaskStatusResponseB\tZ\a./protob\x06proto3"
+	"\rGetTaskStatus\x12\x1f.orchestrator.TaskStatusRequest\x1a .orchestrator.TaskStatusResponseB\x19Z\x17ai-agent-platform/protob\x06proto3"
 
 var (
 	file_proto_orchestrator_proto_rawDescOnce sync.Once

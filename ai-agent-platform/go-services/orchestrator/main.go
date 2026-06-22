@@ -2,6 +2,7 @@ package main
 
 import (
     "context"
+    "fmt" // <--- ADD THIS IMPORT
     "log"
     "net"
     "github.com/google/uuid"
@@ -23,8 +24,9 @@ func (s *Server) CreateTask(ctx context.Context, req *pb.CreateTaskRequest) (*pb
     // 1. Save to Postgres
     s.db.Exec(ctx, "INSERT INTO tasks (id, user_id, status) VALUES ($1, $2, 'PENDING')", taskID, req.UserId)
 
-    // 2. Publish to Pub/Sub (NATS)
-    s.nats.Publish("task.created", []byte(taskID))
+    // 2. Publish to Pub/Sub (NATS) - NOW INCLUDES THE USER'S PROMPT!
+    message := fmt.Sprintf("%s:%s", taskID, req.Prompt)
+    s.nats.Publish("task.created", []byte(message))
 
     return &pb.CreateTaskResponse{TaskId: taskID, Status: "PENDING"}, nil
 }
